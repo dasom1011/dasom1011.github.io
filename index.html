@@ -1,11 +1,350 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>mosadmil's Personal Page</title>
-  </head>
-  <body>
-    <h1>Welcome to my Personal Page</h1>
-    <p>Hosted on GitHub Pages!</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dasom Lim | Personal Website</title>
+  <style>
+    :root {
+      --bg: #f7f7f2;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #6b7280;
+      --accent: #4f7cff;
+      --accent-dark: #3459c9;
+      --border: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 72px 24px 48px;
+      text-align: center;
+      background: linear-gradient(135deg, #eef3ff, #ffffff);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      letter-spacing: -0.04em;
+    }
+
+    header p {
+      max-width: 680px;
+      margin: 18px auto 0;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    main {
+      width: min(1000px, 92%);
+      margin: 40px auto;
+    }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.8rem;
+      letter-spacing: -0.02em;
+    }
+
+    h3 {
+      margin-bottom: 6px;
+    }
+
+    .hero-buttons {
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .button.secondary {
+      background: white;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .button:hover {
+      background: var(--accent-dark);
+      color: white;
+    }
+
+    .profile {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .profile-placeholder {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #dbe7ff, #ffffff);
+      border: 2px dashed var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      background: #fcfcff;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .tag-list li {
+      background: #eef3ff;
+      color: #2947a3;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .contact-list {
+      padding-left: 20px;
+    }
+
+    .contact-list a {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 700px) {
+      .profile {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .profile-placeholder {
+        margin: 0 auto;
+      }
+
+      section {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#resume">Resume</a>
+    <a href="#courses">Courses</a>
+    <a href="#contact">Contact</a>
+    <a href="#ai-usage">AI Usage</a>
+  </nav>
+
+  <header>
+    <h1>Dasom Lim</h1>
+    <p>
+      Computer Science and Engineering student at Seoul National University.
+      Interested in building creative, thoughtful, and user-friendly digital experiences.
+    </p>
+    <div class="hero-buttons">
+      <a class="button" href="#projects">View Projects</a>
+      <a class="button secondary" href="#contact">Contact Me</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="about">
+      <h2>About Me</h2>
+      <div class="profile">
+        <div class="profile-placeholder">
+          Profile photo or avatar
+        </div>
+        <div>
+          <p>
+            Hi, I am Dasom Lim, an undergraduate student majoring in Computer Science
+            and Engineering at Seoul National University.
+          </p>
+          <p>
+            I am currently exploring different areas of computer science while also
+            enjoying design, communication, and creative project work.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2>Projects & Activities</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Design and Public Relations Director, NOVA</h3>
+          <p>
+            I served as the director of the Design and Public Relations Department
+            of NOVA, the 38th Student Council of the Department of Computer Science
+            and Engineering, College of Engineering, Seoul National University.
+          </p>
+          <p>
+            I worked on visual design and promotional materials for student council
+            activities.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Upcoming Project</h3>
+          <p>
+            This section will be updated with another project or activity soon.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="resume">
+      <h2>Resume</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Education</h3>
+          <p>
+            <strong>Seoul National University</strong><br />
+            B.S. in Computer Science and Engineering
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Skills</h3>
+          <ul class="tag-list">
+            <li>C++</li>
+            <li>Python</li>
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>Design</li>
+            <li>Communication</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Experience</h3>
+          <p>
+            Design and Public Relations Director of NOVA, the 38th Student Council
+            of the Department of Computer Science and Engineering at Seoul National
+            University.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="courses">
+      <h2>Courses I Plan to Take</h2>
+      <ul>
+        <li>4190.410 Computer Graphics</li>
+        <li>4190.426A Human-Computer Interaction</li>
+      </ul>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <ul class="contact-list">
+        <li>Email: <a href="mailto:mosadmil@snu.ac.kr">mosadmil@snu.ac.kr</a></li>
+        <li>GitHub: <a href="https://github.com/dasom1011" target="_blank">github.com/dasom1011</a></li>
+        <li>Instagram: <a href="https://www.instagram.com/dazzzml0ll" target="_blank">@dazzzml0ll</a></li>
+      </ul>
+    </section>
+
+    <section id="ai-usage">
+      <h2>AI Usage</h2>
+      <p>
+        <strong>Tool:</strong> Codex
+      </p>
+      <p>
+        <strong>Prompt:</strong> Build a static personal website for GitHub Pages.
+        Include About Me, Projects, Resume, Courses, Contact, and AI Usage sections.
+        Make it responsive, accessible, and simple to maintain.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Dasom Lim. Built with GitHub Pages.</p>
+  </footer>
+</body>
 </html>
