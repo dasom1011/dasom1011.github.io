@@ -66,6 +66,7 @@
       padding: 14px 24px;
       display: flex;
       justify-content: center;
+      align-items: center;
       gap: 18px;
       flex-wrap: wrap;
     }
@@ -84,8 +85,17 @@
 
     nav a.active {
       color: var(--accent);
-      text-decoration: underline;
-      text-underline-offset: 4px;
+    }
+
+    .nav-indicator {
+      position: absolute;
+      bottom: 10px;
+      height: 2px;
+      background: var(--accent);
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      pointer-events: none;
+      border-radius: 2px;
+      opacity: 0;
     }
 
     main {
@@ -271,6 +281,7 @@
     <a href="#courses">Courses</a>
     <a href="#contact">Contact</a>
     <a href="#ai-usage">AI Usage</a>
+    <div class="nav-indicator"></div>
   </nav>
 
   <header>
@@ -405,9 +416,12 @@
   <script>
     const sections = document.querySelectorAll('section');
     const navLinks = document.querySelectorAll('nav a');
+    const indicator = document.querySelector('.nav-indicator');
 
-    window.addEventListener('scroll', () => {
+    function updateNav() {
       let current = '';
+      const scrollPos = window.pageYOffset || document.documentElement.scrollTop;
+
       sections.forEach(section => {
         const sectionTop = section.offsetTop;
         const sectionHeight = section.clientHeight;
@@ -420,9 +434,16 @@
         link.classList.remove('active');
         if (link.getAttribute('href') === `#${current}`) {
           link.classList.add('active');
+          indicator.style.width = `${link.offsetWidth}px`;
+          indicator.style.left = `${link.offsetLeft}px`;
+          indicator.style.opacity = '1';
         }
       });
-    });
+    }
+
+    window.addEventListener('scroll', updateNav);
+    window.addEventListener('resize', updateNav);
+    updateNav();
   </script>
 </body>
 </html>
