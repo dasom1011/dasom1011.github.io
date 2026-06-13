@@ -82,6 +82,12 @@
       color: var(--accent);
     }
 
+    nav a.active {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
     main {
       width: min(1000px, 92%);
       margin: 40px auto;
@@ -157,6 +163,11 @@
       border-radius: 50%;
       object-fit: cover;
       border: 1px solid var(--border);
+      transition: transform 0.3s ease;
+    }
+
+    .profile-image:hover {
+      transform: scale(1.05);
     }
 
     .project-image-grid {
@@ -172,6 +183,11 @@
       object-fit: cover;
       border-radius: 14px;
       border: 1px solid var(--border);
+      transition: transform 0.3s ease;
+    }
+
+    .project-image-grid img:hover {
+      transform: scale(1.05);
     }
 
     .grid {
@@ -385,5 +401,28 @@
   <footer>
     <p>© 2026 Dasom Lim. Built with GitHub Pages.</p>
   </footer>
+
+  <script>
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('nav a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= (sectionTop - 150)) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
