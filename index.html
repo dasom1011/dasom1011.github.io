@@ -157,7 +157,23 @@
       border-radius: 50%;
       object-fit: cover;
       border: 1px solid var(--border);
-      filter: grayscale(100%); /* 프로필 이미지도 흑백 톤으로 맞춰 세련미 강조 */
+      filter: grayscale(100%);
+    }
+
+    .project-image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .project-image-grid img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      filter: grayscale(100%);
     }
 
     .grid {
@@ -259,7 +275,7 @@
     <section id="about">
       <h2>About Me</h2>
       <div class="profile">
-        <img src="https://via.placeholder.com/180/4f7cff/ffffff?text=Profile" alt="Dasom Lim's profile picture" class="profile-image">
+        <img src="assets/profile.jpg" alt="Dasom Lim's profile picture" class="profile-image">
         <div>
           <p>
             Hi, I am Dasom Lim, an undergraduate student majoring in Computer Science
@@ -287,6 +303,11 @@
             I worked on visual design and promotional materials for student council
             activities.
           </p>
+          <div class="project-image-grid" aria-label="Selected NOVA design works">
+            <img src="assets/nova-design-1.jpg" alt="NOVA design work sample 1">
+            <img src="assets/nova-design-2.jpg" alt="NOVA design work sample 2">
+            <img src="assets/nova-design-3.jpg" alt="NOVA design work sample 3">
+          </div>
         </div>
 
         <div class="card">
@@ -307,6 +328,7 @@
             <strong>Seoul National University</strong><br />
             B.S. in Computer Science and Engineering
           </p>
+          <a class="button secondary" href="assets/cv.pdf" target="_blank" rel="noopener">Download CV</a>
         </div>
 
         <div class="card">
