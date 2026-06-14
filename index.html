@@ -37,6 +37,7 @@
 
     html {
       scroll-behavior: smooth;
+      scroll-padding-top: 70px;
     }
 
     body {
@@ -45,6 +46,7 @@
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
+      transition: background-color 0.4s ease, color 0.4s ease;
     }
 
     header {
@@ -52,6 +54,7 @@
       text-align: center;
       background: var(--card);
       border-bottom: 1px solid var(--border);
+      transition: background-color 0.4s ease, border-color 0.4s ease;
     }
 
     header h1 {
@@ -81,6 +84,7 @@
       align-items: center;
       gap: 18px;
       flex-wrap: wrap;
+      transition: background-color 0.4s ease, border-color 0.4s ease;
     }
 
     nav a {
@@ -122,6 +126,7 @@
       padding: 32px;
       margin-bottom: 28px;
       box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+      transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     }
 
     h2 {
@@ -132,6 +137,7 @@
     }
 
     h3 {
+      margin-top: 0;
       margin-bottom: 6px;
       font-family: 'Montserrat', sans-serif;
     }
@@ -193,22 +199,87 @@
     }
 
     .project-image-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      margin-top: 16px;
+      display: flex;
+      overflow-x: auto;
+      gap: 16px;
+      padding: 15px 20px; /* 상하좌우 모두 호버 공간 확보 */
+      margin: 5px -20px 0; /* 카드 패딩만큼 밖으로 확장하여 잘림 방지 */
+      scroll-padding-left: 20px; /* 스냅될 때 첫 번째 사진이 텍스트 라인에 맞춰지도록 수정 */
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE and Edge */
+    }
+
+    .project-image-grid::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
     }
 
     .project-image-grid img {
-      width: 100%;
-      aspect-ratio: 1 / 1;
+      width: 270px; /* 훨씬 작은 사이즈로 고정 */
+      height: 340px; /* 3:4 비율 유지 */
+      flex: 0 0 80px; /* 크기가 줄어들거나 커지지 않도록 고정 */
       object-fit: cover;
-      border-radius: 14px;
+      border-radius: 8px;
       border: 1px solid var(--border);
+      transition: transform 0.3s ease;
+      scroll-snap-align: start;
+    }
+
+    .project-image-grid.is-logo .logo-wrapper,
+    .project-image-grid.is-logo .more-box {
+      width: 340px;
+      height: 340px;
+      flex: 0 0 340px;
+    }
+
+    .project-image-grid.is-logo img {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: opacity 0.4s ease, transform 0.3s ease;
+    }
+
+    .logo-wrapper {
+      position: relative;
+      scroll-snap-align: start;
       transition: transform 0.3s ease;
     }
 
-    .project-image-grid img:hover {
+    .logo-wrapper .dark-only {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    [data-theme="dark"] .logo-wrapper .dark-only {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    [data-theme="dark"] .logo-wrapper .light-only {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .project-image-grid .more-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      color: var(--muted);
+      font-weight: 400;
+      font-size: 1rem;
+      letter-spacing: 0.3em;
+      flex: 0 0 150px;
+      height: 340px;
+      padding-left: 0.4em; /* 자간 때문에 생기는 오른쪽 쏠림 방지 */
+    }
+
+    .project-image-grid img:hover,
+    .logo-wrapper:hover,
+    .project-image-grid .more-box:hover {
       transform: scale(1.05);
     }
 
@@ -223,7 +294,7 @@
       border-radius: 18px;
       padding: 20px;
       background: var(--card);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.4s ease, background-color 0.4s ease, border-color 0.4s ease;
     }
 
     .card:hover {
@@ -240,12 +311,22 @@
     }
 
     .tag-list li {
-      background: var(--border);
+      background: transparent;
       color: var(--text);
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 0.92rem;
+      padding: 6px 14px;
+      border: 1px solid var(--muted);
+      border-radius: 20px;
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 0.02em;
+      transition: all 0.3s ease;
+    }
+
+    .tag-list li:hover {
+      background: var(--text);
+      color: var(--card);
+      border-color: var(--text);
+      transform: translateY(-2px);
     }
 
     .contact-list {
@@ -263,18 +344,150 @@
       color: var(--text);
     }
 
-    .theme-toggle {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 6px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
+    /* Course Styles */
+    .course-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .course-item {
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 18px;
       transition: all 0.3s ease;
+    }
+
+    .course-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .course-emoji {
+      font-size: 1.6rem;
+    }
+
+    .course-info .code {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .course-info .name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* Contact Styles */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .contact-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: var(--card); /* Card 배경색 사용 */
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.3s ease;
+      min-height: 140px; /* 카드 높이 균일하게 유지 */
+    }
+
+    .contact-item:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent); /* 호버 시 강조색 테두리 */
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .contact-text {
+      font-weight: 600;
+      font-size: 1rem;
+      text-align: center;
+      word-break: break-all; /* 긴 이메일 주소 등을 위해 */
+    }
+
+    .contact-text.muted {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 400;
+    }
+
+    /* Theme Switch Styles */
+    .theme-switch {
+      display: inline-block;
+      height: 24px;
+      position: relative;
+      width: 48px;
+    }
+
+    .theme-switch input {
+      display: none;
+    }
+
+    .slider {
+      background-color: var(--border);
+      bottom: 0;
+      cursor: pointer;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: background-color 0.3s;
+      border-radius: 34px;
+    }
+
+    .theme-control {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-left: 10px;
+    }
+
+    .theme-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      min-width: 65px; /* 텍스트 변경 시 너비 고정 */
+    }
+
+    input:checked + .slider {
+      background-color: #333; /* 다크모드일 때 스위치 배경색 강조 */
+    }
+
+    .slider:before {
+      background-color: var(--card);
+      bottom: 4px;
+      content: "";
+      height: 16px;
+      left: 4px;
+      position: absolute;
+      transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      width: 16px;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(24px);
     }
 
     footer {
@@ -308,14 +521,19 @@
     <a href="#contact">Contact</a>
     <a href="#ai-usage">AI Usage</a>
     <div class="nav-indicator"></div>
-    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+    <div class="theme-control">
+      <label class="theme-switch" for="theme-checkbox" title="Toggle dark mode">
+        <input type="checkbox" id="theme-checkbox">
+        <div class="slider"></div>
+      </label>
+      <span id="theme-label" class="theme-label">Light</span>
+    </div>
   </nav>
 
   <header>
     <h1>Dasom Lim</h1>
     <p>
-      Computer Science and Engineering student at Seoul National University.
-      Interested in building creative, thoughtful, and user-friendly digital experiences.
+      Computer Science and Engineering student at Seoul National University <br> — passionate about intuitive user experiences and Human-Computer Interaction.
     </p>
     <div class="hero-buttons">
       <a class="button" href="#projects">View Projects</a>
@@ -330,12 +548,10 @@
         <img src="assets/profile.jpg" alt="Dasom Lim's profile picture" class="profile-image">
         <div>
           <p>
-            Hi, I am Dasom Lim, an undergraduate student majoring in Computer Science
-            and Engineering at Seoul National University.
+            Hi, I am Dasom Lim, an undergraduate student majoring in Computer Science and Engineering at Seoul National University.
           </p>
           <p>
-            I am currently exploring different areas of computer science while also
-            enjoying design, communication, and creative project work.
+            I am currently exploring various areas of computer science and engineering while continuing to develop my design skills. I am especially interested in how technology and design can come together to create intuitive user experiences.
           </p>
         </div>
       </div>
@@ -345,28 +561,42 @@
       <h2>Projects & Activities</h2>
       <div class="grid">
         <div class="card">
-          <h3>Design and Public Relations Director, NOVA</h3>
+          <h3>Director of Design, NOVA</h3>
           <p>
-            I served as the director of the Design and Public Relations Department
-            of NOVA, the 38th Student Council of the Department of Computer Science
-            and Engineering, College of Engineering, Seoul National University.
+            I am serving as Director of Design for NOVA, the 38th Student Council
+            of the Department of Computer Science and Engineering, College of
+            Engineering, Seoul National University.
           </p>
           <p>
-            I worked on visual design and promotional materials for student council
-            activities.
+            I lead the visual design and production of promotional materials for various council activities.
           </p>
           <div class="project-image-grid" aria-label="Selected NOVA design works">
             <img src="assets/nova-design-1.jpg" alt="NOVA design work sample 1">
             <img src="assets/nova-design-2.jpg" alt="NOVA design work sample 2">
             <img src="assets/nova-design-3.jpg" alt="NOVA design work sample 3">
+            <div class="more-box">...</div>
           </div>
         </div>
 
         <div class="card">
-          <h3>Upcoming Project</h3>
+          <h3>Logo Design of NOVA</h3>
           <p>
-            This section will be updated with another project or activity soon.
+            Inspired by the Latin for 'new' and the brilliance of a supernova, I crafted NOVA’s identity to embody its radiant energy.
           </p>
+          <p>
+            The logo features a radiant diamond motif—a geometric synthesis meticulously architected from the structural forms of the four letters: N, O, V, and A.
+          </p>
+          <div class="project-image-grid is-logo" aria-label="Selected logo design works">
+            <div class="logo-wrapper">
+              <img src="assets/logo-1-l.jpg" alt="Logo design work 1" class="light-only">
+              <img src="assets/logo-1-d.jpg" alt="Logo design work 1" class="dark-only">
+            </div>
+            <div class="logo-wrapper">
+              <img src="assets/logo-2-l.jpg" alt="Logo design work 2" class="light-only">
+              <img src="assets/logo-2-d.jpg" alt="Logo design work 2" class="dark-only">
+            </div>
+            <div class="more-box">...</div>
+          </div>
         </div>
       </div>
     </section>
@@ -378,49 +608,88 @@
           <h3>Education</h3>
           <p>
             <strong>Seoul National University</strong><br />
-            B.S. in Computer Science and Engineering
+            Undergraduate in Computer Science and Engineering
           </p>
           <a class="button secondary" href="assets/cv.pdf" target="_blank" rel="noopener">Download CV</a>
         </div>
 
         <div class="card">
           <h3>Skills</h3>
+          <p style="margin: 10px 0 5px; font-size: 0.9rem; color: var(--muted);">Programming</p>
           <ul class="tag-list">
-            <li>C++</li>
             <li>Python</li>
-            <li>HTML</li>
-            <li>CSS</li>
-            <li>Design</li>
-            <li>Communication</li>
+            <li>C</li>
+            <li>C++</li>
+            <li>Java</li>
+            
+          </ul>
+          <p style="margin: 15px 0 5px; font-size: 0.9rem; color: var(--muted);">Design Tools</p>
+          <ul class="tag-list">
+            <li>Figma</li>
+            <li>Procreate</li>
+            <li>Powerpoint </li>
+            <li>Final Cut</li>
           </ul>
         </div>
 
         <div class="card">
           <h3>Experience</h3>
-          <p>
-            Design and Public Relations Director of NOVA, the 38th Student Council
-            of the Department of Computer Science and Engineering at Seoul National
-            University.
-          </p>
+          <div style="margin-bottom: 16px;">
+            <p><strong>2026</strong></p>
+            <p style="font-size: 0.95rem;">Director of Design, [NOVA] 38th Student Council, SNU CSE</p>
+          </div>
+          <div>
+            <p><strong>2025</strong></p>
+            <p style="font-size: 0.95rem; margin-bottom: 4px;">Staff of Design, [FLOW] 37th Student Council, SNU CSE</p>
+            <p style="font-size: 0.95rem;">Design Team Lead, ComSee 2025 Organizing Committee</p>
+          </div>
         </div>
       </div>
     </section>
 
     <section id="courses">
       <h2>Courses I Plan to Take</h2>
-      <ul>
-        <li>4190.410 Computer Graphics</li>
-        <li>4190.426A Human-Computer Interaction</li>
-      </ul>
+      <div class="course-list">
+        <div class="course-item">
+          <span class="course-emoji">∷</span>
+          <div class="course-info">
+            <span class="code">4190.410</span>
+            <span class="name">Computer Graphics</span>
+          </div>
+        </div>
+        <div class="course-item">
+          <span class="course-emoji">∷</span>
+          <div class="course-info">
+            <span class="code">4190.426A</span>
+            <span class="name">Human-Computer Interaction</span>
+          </div>
+        </div>
+        <div class="course-item">
+          <span class="course-emoji">∷</span>
+          <div class="course-info">
+            <span class="code">M3389.004000</span>
+            <span class="name">Foundations of Visual Design</span>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="contact">
       <h2>Contact</h2>
-      <ul class="contact-list">
-        <li>Email: <a href="mailto:mosadmil@snu.ac.kr">mosadmil@snu.ac.kr</a></li>
-        <li>GitHub: <a href="https://github.com/dasom1011" target="_blank">github.com/dasom1011</a></li>
-        <li>Instagram: <a href="https://www.instagram.com/dazzzml0ll" target="_blank">@dazzzml0ll</a></li>
-      </ul>
+      <div class="contact-grid">
+        <a href="mailto:mosadmil@snu.ac.kr" class="contact-item">
+          <span class="contact-text">Email</span>
+          <span class="contact-text muted">mosadmil@snu.ac.kr</span>
+        </a>
+        <a href="https://github.com/dasom1011" target="_blank" class="contact-item">
+          <span class="contact-text">GitHub</span>
+          <span class="contact-text muted">dasom1011</span>
+        </a>
+        <a href="https://www.instagram.com/dazzzml0ll" target="_blank" class="contact-item">
+          <span class="contact-text">Instagram</span>
+          <span class="contact-text muted">@dazzzml0ll</span>
+        </a>
+      </div>
     </section>
 
     <section id="ai-usage">
@@ -444,24 +713,31 @@
     const sections = document.querySelectorAll('section');
     const navLinks = document.querySelectorAll('nav a');
     const indicator = document.querySelector('.nav-indicator');
-    const themeToggle = document.getElementById('theme-toggle');
+    const themeCheckbox = document.getElementById('theme-checkbox');
+    const themeLabel = document.getElementById('theme-label');
 
     // Dark mode logic
     const currentTheme = localStorage.getItem('theme');
-    if (currentTheme) {
-      document.documentElement.setAttribute('data-theme', currentTheme);
-      themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeToggle.textContent = '☀️';
-    }
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    themeToggle.addEventListener('click', () => {
-      let theme = document.documentElement.getAttribute('data-theme');
-      const newTheme = theme === 'dark' ? 'light' : 'dark';
+    const updateThemeText = (isDark) => {
+      themeLabel.textContent = isDark ? 'Dark' : 'Light';
+    };
+
+    if (currentTheme === 'dark' || (!currentTheme && prefersDark)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeCheckbox.checked = true;
+    }
+    updateThemeText(themeCheckbox.checked);
+
+    themeCheckbox.addEventListener('change', (e) => {
+      const newTheme = e.target.checked ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
-      themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+      // 0.6s 애니메이션이 끝난 후 텍스트 변경
+      setTimeout(() => {
+        updateThemeText(themeCheckbox.checked);
+      }, 600);
       setTimeout(updateNav, 50); // Small delay to let styles apply
     });
 
