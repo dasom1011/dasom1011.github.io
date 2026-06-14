@@ -18,8 +18,8 @@
       --accent-light: #ffffff;
       --border: #d1d1d1;
       --nav-bg: rgba(255, 255, 255, 0.92);
-      --shadow-hover: 0 15px 35px rgba(15, 23, 42, 0.08);
-      --shadow-hover-img: 0 10px 25px rgba(15, 23, 42, 0.05);
+      --shadow-hover: 0 8px 25px rgba(15, 23, 42, 0.08);
+      --shadow-hover-img: 0 5px 20px rgba(15, 23, 42, 0.05);
     }
 
     [data-theme="dark"] {
@@ -64,8 +64,9 @@
     header h1 {
       margin: 0;
       font-family: 'Montserrat', sans-serif;
-      font-size: clamp(2.4rem, 6vw, 4.5rem);
-      letter-spacing: -0.04em;
+      font-size: clamp(2rem, 5.5vw, 4rem);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
 
     header p {
@@ -207,7 +208,7 @@
       overflow-x: auto;
       gap: 16px;
       padding: 30px 20px; /* 호버 시 위아래 잘림 방지를 위해 패딩을 더 넉넉히 추가 */
-      margin: -10px -20px 0; /* 패딩 증가분만큼 마진을 조정하여 위치 유지 */
+      margin: -30px -20px 0; /* 위쪽 여백을 음수값으로 조절하여 처지는 느낌 제거 */
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none; /* Firefox */
@@ -470,6 +471,12 @@
       font-size: 0.85rem;
       font-weight: 600;
       min-width: 65px; /* 텍스트 변경 시 너비 고정 */
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      display: inline-block;
+    }
+
+    .theme-label.switching {
+      opacity: 0;
     }
 
     input:checked + .slider {
@@ -483,7 +490,7 @@
       height: 16px;
       left: 4px;
       position: absolute;
-      transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transition: transform 0.3s ease;
       width: 16px;
       border-radius: 50%;
       z-index: 2;
@@ -739,7 +746,11 @@
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     const updateThemeText = (isDark) => {
-      themeLabel.textContent = isDark ? 'Dark' : 'Light';
+      themeLabel.classList.add('switching');
+      setTimeout(() => {
+        themeLabel.textContent = isDark ? 'Dark' : 'Light';
+        themeLabel.classList.remove('switching');
+      }, 150); // 토글 애니메이션 중간 지점에서 텍스트 교체
     };
 
     if (currentTheme === 'dark' || (!currentTheme && prefersDark)) {
@@ -752,10 +763,7 @@
       const newTheme = e.target.checked ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
-      // 0.6s 애니메이션이 끝난 후 텍스트 변경
-      setTimeout(() => {
-        updateThemeText(themeCheckbox.checked);
-      }, 600);
+      updateThemeText(e.target.checked);
       setTimeout(updateNav, 50); // Small delay to let styles apply
     });
 
