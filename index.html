@@ -3,11 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dasom Lim | Personal Website</title>  
+  <title>Dasom Lim | Personal Website</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+
+  <!-- 테마를 렌더링 전에 적용해서 다크모드 깜빡임(FOUC) 방지 -->
+  <script>
+    (function () {
+      var theme = null;
+      try { theme = localStorage.getItem('theme'); } catch (e) {}
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (theme === 'dark' || (!theme && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
   <style>
     :root {
       --bg: #f0f0f0;
@@ -35,9 +48,7 @@
       --shadow-hover-img: 0 0 20px rgba(255, 255, 255, 0.04);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       scroll-behavior: smooth;
@@ -100,17 +111,13 @@
       transition: color 0.3s ease;
     }
 
-    nav a:hover {
-      color: var(--accent);
-    }
-
-    nav a.active {
-      color: var(--accent);
-    }
+    nav a:hover,
+    nav a.active { color: var(--accent); }
 
     .nav-indicator {
       position: absolute;
-      bottom: 10px;
+      top: 0;
+      left: 0;
       height: 2px;
       background: var(--accent);
       transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
@@ -183,6 +190,14 @@
       color: var(--accent-light);
     }
 
+    /* 키보드 포커스 표시 */
+    a:focus-visible,
+    .button:focus-visible,
+    .theme-switch input:focus-visible + .slider {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
     .profile {
       display: grid;
       grid-template-columns: 180px 1fr;
@@ -199,35 +214,33 @@
       transition: transform 0.3s ease;
     }
 
-    .profile-image:hover {
-      transform: scale(1.05);
-    }
+    .profile-image:hover { transform: scale(1.05); }
 
     .project-image-grid {
       display: flex;
       overflow-x: auto;
       gap: 16px;
-      padding: 30px 20px; /* 호버 시 위아래 잘림 방지를 위해 패딩을 더 넉넉히 추가 */
-      margin: -30px -20px 0; /* 위쪽 여백을 음수값으로 조절하여 처지는 느낌 제거 */
+      padding: 30px 20px;
+      margin: -30px -20px 0;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
-      scrollbar-width: none; /* Firefox */
-      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
 
-    .project-image-grid::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera */
-    }
+    .project-image-grid::-webkit-scrollbar { display: none; }
 
+    /* 수정: flex-basis가 width를 덮어써서 80px로 줄던 문제 */
     .project-image-grid img {
-      width: 270px; /* 훨씬 작은 사이즈로 고정 */
-      height: 340px; /* 3:4 비율 유지 */
-      flex: 0 0 80px; /* 크기가 줄어들거나 커지지 않도록 고정 */
+      width: 270px;
+      height: 340px;
+      flex: 0 0 270px;
       object-fit: cover;
       border-radius: 8px;
       border: 1px solid var(--border);
       transition: transform 0.3s ease;
       scroll-snap-align: center;
+      position: relative;
     }
 
     .project-image-grid.is-logo .logo-wrapper,
@@ -278,15 +291,15 @@
       letter-spacing: 0.3em;
       flex: 0 0 150px;
       height: 340px;
-      padding-left: 0.4em; /* 자간 때문에 생기는 오른쪽 쏠림 방지 */
+      padding-left: 0.4em;
       scroll-snap-align: center;
     }
 
-    .project-image-grid img:hover,
+    /* 수정: 로고 이미지(absolute)에 hover 시 position:relative가 적용되어 레이아웃이 깨지던 문제 */
+    .project-image-grid:not(.is-logo) img:hover,
     .logo-wrapper:hover {
       transform: scale(1.05);
       z-index: 10;
-      position: relative;
       box-shadow: var(--shadow-hover-img);
     }
 
@@ -337,63 +350,6 @@
       transform: translateY(-2px);
     }
 
-    .contact-list {
-      padding-left: 20px;
-    }
-
-    .contact-list a {
-      color: var(--accent);
-      font-weight: 600;
-      transition: color 0.3s ease;
-    }
-
-    .contact-list a:hover {
-      text-decoration: underline;
-      color: var(--text);
-    }
-
-    /* Course Styles */
-    .course-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-      margin-top: 10px;
-    }
-
-    .course-item {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 16px 20px;
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      transition: all 0.3s ease;
-    }
-
-    .course-item:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent);
-      box-shadow: var(--shadow-hover);
-    }
-
-    .course-emoji {
-      font-size: 1.6rem;
-    }
-
-    .course-info .code {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-    }
-
-    .course-info .name {
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-
     /* Contact Styles */
     .contact-grid {
       display: grid;
@@ -408,18 +364,18 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background: var(--card); /* Card 배경색 사용 */
+      background: var(--card);
       border: 1px solid var(--border);
       border-radius: 18px;
       text-decoration: none;
       color: var(--text);
       transition: all 0.3s ease;
-      min-height: 140px; /* 카드 높이 균일하게 유지 */
+      min-height: 140px;
     }
 
     .contact-item:hover {
       transform: translateY(-5px);
-      border-color: var(--accent); /* 호버 시 강조색 테두리 */
+      border-color: var(--accent);
       box-shadow: var(--shadow-hover);
     }
 
@@ -427,7 +383,7 @@
       font-weight: 600;
       font-size: 1rem;
       text-align: center;
-      word-break: break-all; /* 긴 이메일 주소 등을 위해 */
+      word-break: break-all;
     }
 
     .contact-text.muted {
@@ -444,8 +400,15 @@
       width: 48px;
     }
 
+    /* 수정: display:none 대신 시각적으로만 숨겨 키보드 접근 가능하게 */
     .theme-switch input {
-      display: none;
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      cursor: pointer;
+      z-index: 3;
     }
 
     .slider {
@@ -470,18 +433,12 @@
     .theme-label {
       font-size: 0.85rem;
       font-weight: 600;
-      min-width: 65px; /* 텍스트 변경 시 너비 고정 */
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      min-width: 65px;
+      transition: opacity 0.2s ease;
       display: inline-block;
     }
 
-    .theme-label.switching {
-      opacity: 0;
-    }
-
-    input:checked + .slider {
-      background-color: #333; /* 다크모드일 때 스위치 배경색 강조 */
-    }
+    .theme-label.switching { opacity: 0; }
 
     .slider:before {
       background-color: var(--card);
@@ -496,13 +453,8 @@
       z-index: 2;
     }
 
-    input:checked + .slider {
-      background-color: var(--accent);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(24px);
-    }
+    input:checked + .slider { background-color: var(--accent); }
+    input:checked + .slider:before { transform: translateX(24px); }
 
     footer {
       text-align: center;
@@ -515,14 +467,8 @@
         grid-template-columns: 1fr;
         text-align: center;
       }
-
-      .profile-image {
-        margin: 0 auto;
-      }
-
-      section {
-        padding: 24px;
-      }
+      .profile-image { margin: 0 auto; }
+      section { padding: 24px; }
     }
   </style>
 </head>
@@ -531,23 +477,21 @@
     <a href="#about">About</a>
     <a href="#projects">Projects</a>
     <a href="#resume">Resume</a>
-    <a href="#courses">Courses</a>
     <a href="#contact">Contact</a>
-    <a href="#ai-usage">AI Usage</a>
     <div class="nav-indicator"></div>
     <div class="theme-control">
       <label class="theme-switch" for="theme-checkbox" title="Toggle dark mode">
-        <input type="checkbox" id="theme-checkbox">
+        <input type="checkbox" id="theme-checkbox" aria-label="Toggle dark mode">
         <div class="slider"></div>
       </label>
-      <span id="theme-label" class="theme-label">Light</span>
+      <span id="theme-label" class="theme-label" aria-live="polite">Light</span>
     </div>
   </nav>
 
   <header>
     <h1>Dasom Lim</h1>
     <p>
-      Computer Science and Engineering student at Seoul National University <br> — passionate about intuitive user experiences and Human-Computer Interaction.
+      Computer Science and Engineering student at Seoul National University <br> — designing visual identities and building immersive user experiences.
     </p>
     <div class="hero-buttons">
       <a class="button" href="#projects">View Projects</a>
@@ -565,8 +509,17 @@
             Hi, I am Dasom Lim, an undergraduate student majoring in Computer Science and Engineering at Seoul National University.
           </p>
           <p>
-            I am currently exploring various areas of computer science and engineering while continuing to develop my design skills. I am especially interested in how technology and design can come together to create intuitive user experiences.
+            I work between code and design. As Director of Design &amp; Promotion for the 38th Student Council of CSE (NOVA) and Director of the Design Team for COMSEE 2026, I create visual identities and promotional materials, from logos and pamphlets to merchandise.
           </p>
+          <p>
+            I enjoy building what I design, and I want to keep growing in the space where technology and design meet.
+          </p>
+          <ul class="tag-list" aria-label="Interests">
+            <li>Immersive UI/UX development</li>
+            <li>Game graphics &amp; development</li>
+            <li>Typography</li>
+            <li>Visual identity design</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -575,9 +528,9 @@
       <h2>Projects & Activities</h2>
       <div class="grid">
         <div class="card">
-          <h3>Director of Design, NOVA</h3>
+          <h3>Director of Design &amp; Promotion, NOVA</h3>
           <p>
-            I am serving as Director of Design for NOVA, the 38th Student Council
+            I am serving as Director of Design &amp; Promotion for NOVA, the 38th Student Council
             of the Department of Computer Science and Engineering, College of
             Engineering, Seoul National University.
           </p>
@@ -585,11 +538,11 @@
             I lead the visual design and production of promotional materials for various council activities.
           </p>
           <div class="project-image-grid" aria-label="Selected NOVA design works">
-            <img src="assets/nova-design-1.jpg" alt="NOVA design work sample 1">
-            <img src="assets/nova-design-2.jpg" alt="NOVA design work sample 2">
-            <img src="assets/nova-design-3.jpg" alt="NOVA design work sample 3">
-            <img src="assets/nova-design-4.jpg" alt="NOVA design work sample 4">
-            <div class="more-box">...</div>
+            <img src="assets/nova-design-1.jpg" alt="NOVA design work sample 1" loading="lazy">
+            <img src="assets/nova-design-2.jpg" alt="NOVA design work sample 2" loading="lazy">
+            <img src="assets/nova-design-3.jpg" alt="NOVA design work sample 3" loading="lazy">
+            <img src="assets/nova-design-4.jpg" alt="NOVA design work sample 4" loading="lazy">
+            <div class="more-box" aria-hidden="true">...</div>
           </div>
         </div>
 
@@ -603,14 +556,14 @@
           </p>
           <div class="project-image-grid is-logo" aria-label="Selected logo design works">
             <div class="logo-wrapper">
-              <img src="assets/logo-1-l.jpg" alt="Logo design work 1" class="light-only">
-              <img src="assets/logo-1-d.jpg" alt="Logo design work 1" class="dark-only">
+              <img src="assets/logo-1-l.jpg" alt="Logo design work 1" class="light-only" loading="lazy">
+              <img src="assets/logo-1-d.jpg" alt="" class="dark-only" loading="lazy">
             </div>
             <div class="logo-wrapper">
-              <img src="assets/logo-2-l.jpg" alt="Logo design work 2" class="light-only">
-              <img src="assets/logo-2-d.jpg" alt="Logo design work 2" class="dark-only">
+              <img src="assets/logo-2-l.jpg" alt="Logo design work 2" class="light-only" loading="lazy">
+              <img src="assets/logo-2-d.jpg" alt="" class="dark-only" loading="lazy">
             </div>
-            <div class="more-box">...</div>
+            <div class="more-box" aria-hidden="true">...</div>
           </div>
         </div>
       </div>
@@ -625,7 +578,10 @@
             <strong>Seoul National University</strong><br />
             Undergraduate in Computer Science and Engineering
           </p>
-          <a class="button secondary" href="assets/cv.pdf?v=1.1" target="_blank" rel="noopener">Download CV</a>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a class="button secondary" href="assets/cv.pdf?v=1.1" target="_blank" rel="noopener">Download CV</a>
+            <a class="button secondary" href="assets/portfolio.pdf" target="_blank" rel="noopener">View Portfolio</a>
+          </div>
         </div>
 
         <div class="card">
@@ -634,56 +590,30 @@
           <ul class="tag-list">
             <li>Python</li>
             <li>C</li>
-            <li>C++</li>
             <li>Java</li>
-            
           </ul>
           <p style="margin: 15px 0 5px; font-size: 0.9rem; color: var(--muted);">Design Tools</p>
           <ul class="tag-list">
             <li>Figma</li>
             <li>Procreate</li>
-            <li>Powerpoint </li>
-            <li>Final Cut</li>
+            <li>Final Cut Pro</li>
+            <li>Premiere Pro</li>
           </ul>
         </div>
 
         <div class="card">
           <h3>Experience</h3>
           <div style="margin-bottom: 16px;">
-            <p><strong>2026</strong></p>
-            <p style="font-size: 0.95rem;">Director of Design, [NOVA] 38th Student Council, SNU CSE</p>
+            <p style="margin-bottom: 2px;"><strong>Aug 2026 – Sep 2026</strong></p>
+            <p style="font-size: 0.95rem; margin-top: 0;">Director of the Design Team, COMSEE Special Committee, SNU CSE</p>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <p style="margin-bottom: 2px;"><strong>Dec 2025 – Nov 2026</strong></p>
+            <p style="font-size: 0.95rem; margin-top: 0;">Director of Design &amp; Promotion, [NOVA] 38th Student Council, SNU CSE</p>
           </div>
           <div>
-            <p><strong>2025</strong></p>
-            <p style="font-size: 0.95rem; margin-bottom: 4px;">Staff of Design, [FLOW] 37th Student Council, SNU CSE</p>
-            <p style="font-size: 0.95rem;">Design Team Lead, ComSee 2025 Organizing Committee</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="courses">
-      <h2>Courses I Plan to Take</h2>
-      <div class="course-list">
-        <div class="course-item">
-          <span class="course-emoji">∷</span>
-          <div class="course-info">
-            <span class="code">4190.410</span>
-            <span class="name">Computer Graphics</span>
-          </div>
-        </div>
-        <div class="course-item">
-          <span class="course-emoji">∷</span>
-          <div class="course-info">
-            <span class="code">4190.426A</span>
-            <span class="name">Human-Computer Interaction</span>
-          </div>
-        </div>
-        <div class="course-item">
-          <span class="course-emoji">∷</span>
-          <div class="course-info">
-            <span class="code">M3389.004000</span>
-            <span class="name">Foundations of Visual Design</span>
+            <p style="margin-bottom: 2px;"><strong>2025</strong></p>
+            <p style="font-size: 0.95rem; margin-top: 0;">Member of Design &amp; Promotion Team, [FLOW] 37th Student Council, SNU CSE</p>
           </div>
         </div>
       </div>
@@ -696,36 +626,14 @@
           <span class="contact-text">Email</span>
           <span class="contact-text muted">mosadmil@snu.ac.kr</span>
         </a>
-        <a href="https://github.com/dasom1011" target="_blank" class="contact-item">
+        <a href="https://github.com/dasom1011" target="_blank" rel="noopener" class="contact-item">
           <span class="contact-text">GitHub</span>
           <span class="contact-text muted">dasom1011</span>
         </a>
-        <a href="https://www.instagram.com/dazzzml0ll" target="_blank" class="contact-item">
+        <a href="https://www.instagram.com/dazzzml0ll" target="_blank" rel="noopener" class="contact-item">
           <span class="contact-text">Instagram</span>
           <span class="contact-text muted">@dazzzml0ll</span>
         </a>
-      </div>
-    </section>
-
-    <section id="ai-usage">
-      <h2>AI Usage</h2>
-      <div class="grid">
-        <div class="card">
-          <span class="ai-label">Main Tool</span>
-          <p style="margin: 0 0 12px 0; font-weight: 600; font-size: 1.1rem;">Codex</p>
-          <span class="ai-label">Initial Prompt</span>
-          <p class="ai-prompt" style="margin: 0;">
-            "Build a static personal website for GitHub Pages. Include About Me, Projects, Resume, Courses, Contact, and AI Usage sections. Make it responsive, accessible, and simple to maintain."
-          </p>
-        </div>
-        <div class="card">
-          <span class="ai-label">Sub Tool</span>
-          <p style="margin: 0 0 12px 0; font-weight: 600; font-size: 1.1rem;">Gemini Code Assist</p>
-          <span class="ai-label">Usage</span>
-          <p class="ai-prompt" style="margin: 0;">
-            Iterative UI/UX refinement, dark mode implementation, and layout optimization based on natural language feedback.
-          </p>
-        </div>
       </div>
     </section>
   </main>
@@ -737,69 +645,70 @@
   <script>
     const sections = document.querySelectorAll('section');
     const navLinks = document.querySelectorAll('nav a');
+    const nav = document.querySelector('nav');
     const indicator = document.querySelector('.nav-indicator');
     const themeCheckbox = document.getElementById('theme-checkbox');
     const themeLabel = document.getElementById('theme-label');
 
-    // Dark mode logic
-    const currentTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // Dark mode (초기 테마는 <head> 스크립트에서 이미 적용됨)
+    const isDarkNow = () => document.documentElement.getAttribute('data-theme') === 'dark';
+    themeCheckbox.checked = isDarkNow();
+    themeLabel.textContent = isDarkNow() ? 'Dark' : 'Light';
 
     const updateThemeText = (isDark) => {
       themeLabel.classList.add('switching');
       setTimeout(() => {
         themeLabel.textContent = isDark ? 'Dark' : 'Light';
         themeLabel.classList.remove('switching');
-      }, 150); // 토글 애니메이션 중간 지점에서 텍스트 교체
+      }, 150);
     };
-
-    if (currentTheme === 'dark' || (!currentTheme && prefersDark)) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeCheckbox.checked = true;
-    }
-    updateThemeText(themeCheckbox.checked);
 
     themeCheckbox.addEventListener('change', (e) => {
       const newTheme = e.target.checked ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
+      try { localStorage.setItem('theme', newTheme); } catch (err) {}
       updateThemeText(e.target.checked);
-      setTimeout(updateNav, 50); // Small delay to let styles apply
     });
 
+    // Nav active indicator
     function updateNav() {
+      const scrollPos = window.scrollY;
       let current = '';
-      const scrollPos = window.pageYOffset || document.documentElement.scrollTop;
 
       sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= (sectionTop - 150)) {
-          current = section.getAttribute('id');
+        if (scrollPos >= section.offsetTop - 150) {
+          current = section.id;
         }
       });
 
+      let activeLink = null;
       navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
-          link.classList.add('active');
-          indicator.style.width = `${link.offsetWidth}px`;
-          indicator.style.left = `${link.offsetLeft}px`;
-          indicator.style.opacity = '1';
-        }
+        const isActive = link.getAttribute('href') === `#${current}`;
+        link.classList.toggle('active', isActive);
+        if (isActive) activeLink = link;
       });
+
+      if (activeLink) {
+        // 링크 바로 아래에 배치 (nav가 줄바꿈돼도 위치가 맞도록 offsetTop 기준)
+        indicator.style.width = `${activeLink.offsetWidth}px`;
+        indicator.style.transform = `translate(${activeLink.offsetLeft}px, ${activeLink.offsetTop + activeLink.offsetHeight + 2}px)`;
+        indicator.style.opacity = '1';
+      } else {
+        // 맨 위(header 영역)에서는 인디케이터 숨김
+        indicator.style.opacity = '0';
+      }
     }
 
-    window.addEventListener('scroll', updateNav);
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => { updateNav(); ticking = false; });
+        ticking = true;
+      }
+    }, { passive: true });
     window.addEventListener('resize', updateNav);
+    window.addEventListener('load', updateNav);
     updateNav();
-
-    // 마우스 호버 시 해당 아이템으로 자동 스크롤되는 기능 추가
-    document.querySelectorAll('.project-image-grid > *').forEach(item => {
-      item.addEventListener('mouseenter', () => {
-        item.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-      });
-    });
   </script>
 </body>
 </html>
